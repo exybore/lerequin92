@@ -2,5 +2,6 @@
   "debug": false,
   "token": "Bot's token",
   "client_id": 608681843570507833,
-  "prefix": "92:"
+  "prefix": "92:",
+  "color": 1060081
 }
