@@ -10,26 +10,11 @@ bot = Discordrb::Commands::CommandBot.new(token: config['token'],
                          help_command: false)
 
 bot.ready do
-  bot.voice_connect(272641655709106176)
   puts 'Connected to Discord'
   bot.game = 'tirer sur la daronne'
 end
 
-bot.message(in: 272639973352538123, starts_with: '92:') do |event|
-  sound_name = event.content.sub(/92:/, '')
-  next if sound_name == 'list'
-  
-  event.message.delete
-  voice = event.voice
-  sound_file = Dir.pwd + "/sounds/#{sound_name}.mp3"
-
-  unless File::exist?(sound_file)
-    event.send_temporary_message ":x: Son inconnu. Faites `92:list` pour voir la liste des sons disponibles.", 2
-    next
-  end
-
-  voice.play_file(Dir.pwd + "/sounds/#{sound_name}.mp3")
-end
+commands = %w(list connect)
 
 bot.command(:list,
             description: 'Lister tous les sons disponibles',
@@ -43,6 +28,32 @@ bot.command(:list,
     title: 'Liste des sons',
     description: sounds
   ))
+end
+
+bot.command(:connect,
+            description: 'Se connecter à un salon vocal') do |event|
+  channel = event.author.voice_channel
+  unless channel
+    event.send_message(':x: Vous devez être connecté à un salon vocal.')
+    next
+  end
+  bot.voice_connect(channel)
+end
+
+bot.message(starts_with: '92:') do |event|
+  sound_name = event.content.sub(/92:/, '')
+  next if commands.include? sound_name
+  
+  event.message.delete
+  voice = event.voice
+  sound_file = Dir.pwd + "/sounds/#{sound_name}.mp3"
+
+  unless File::exist?(sound_file)
+    event.send_temporary_message ':x: Son inconnu. Faites `92:list` pour voir la liste des sons disponibles.', 2
+    next
+  end
+
+  voice.play_file(sound_file)
 end
 
 bot.run
