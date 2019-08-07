@@ -1,6 +1,7 @@
 {
   "debug": false,
   "token": "Bot's token",
+  "sounds_dir": "sounds",
   "client_id": 608681843570507833,
   "prefix": "92:",
   "color": 1060081
