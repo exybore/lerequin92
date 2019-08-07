@@ -8,5 +8,6 @@ module LeRequin92
       next
     end
     $bot.voice_connect(channel)
+    return
   end
 end
