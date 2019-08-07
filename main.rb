@@ -19,8 +19,15 @@ bot.message(in: 272639973352538123, starts_with: '92:') do |event|
   sound_name = event.content.sub(/92:/, '')
   next if sound_name == 'list'
   
-  voice = event.voice
   event.message.delete
+  voice = event.voice
+  sound_file = Dir.pwd + "/sounds/#{sound_name}.mp3"
+
+  unless File::exist?(sound_file)
+    event.send_temporary_message ":x: Son inconnu. Faites `92:list` pour voir la liste des sons disponibles.", 2
+    next
+  end
+
   voice.play_file(Dir.pwd + "/sounds/#{sound_name}.mp3")
 end
 
