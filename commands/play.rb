@@ -1,11 +1,11 @@
 module LeRequin92
-  $bot.message(start_with: CONFIG['prefix']) do |event|
-    sound_name = event.content.sub(/92:/, '')
+  $bot.message(start_with: CONFIG['bot']['commands_prefix']) do |event|
+    sound_name = event.content.sub(/#{CONFIG['bot']['commands_prefix']}/, '')
     next if COMMANDS.include? sound_name
     
     event.message.delete
     voice = event.voice
-    sound_file = ::Dir.pwd + "/#{CONFIG['sounds_dir']}/#{sound_name}.mp3"
+    sound_file = ::Dir.pwd + "/#{CONFIG['sounds']['folder']}/#{sound_name}.#{CONFIG['sounds']['format']}"
 
     unless ::File::exist?(sound_file)
       event.send_temporary_message ':x: Son inconnu. Faites `92:list` pour voir la liste des sons disponibles.', 2
@@ -26,7 +26,6 @@ module LeRequin92
     end
 
     voice.play_file(sound_file)
-
     $bot.voice_destroy(event.server) if to_disconnect
   end
 end
