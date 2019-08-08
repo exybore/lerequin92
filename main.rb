@@ -13,7 +13,7 @@ module LeRequin92
 
   $bot.ready do
     puts 'Connected to Discord'
-    $bot.game = 'tirer sur la daronne'
+    $bot.game = CONFIG['status']
   end
 
   ::Dir.each_child('commands') do |command|
