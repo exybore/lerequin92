@@ -11,11 +11,22 @@ module LeRequin92
       event.send_temporary_message ':x: Son inconnu. Faites `92:list` pour voir la liste des sons disponibles.', 2
       next
     end
-    unless voice
-      event.send_temporary_message ':x: Vous devez être connecté à un salon vocal afin de jouer un son.', 2
-      next
+
+    if voice
+      to_disconnect = false
+    else
+      channel = event.author.voice_channel
+      unless channel
+        event.send_temporary_message ':x: Vous devez être connecté à un salon vocal afin de jouer un son.', 2
+        next
+      end
+      $bot.voice_connect(channel)
+      voice = $bot.voice(event.server)
+      to_disconnect = true
     end
 
     voice.play_file(sound_file)
+
+    $bot.voice_destroy(event.server) if to_disconnect
   end
 end
